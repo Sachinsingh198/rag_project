@@ -12,3 +12,20 @@ useful text can make a project easier to understand, especially when used
 for examples, tests, or quick prototypes.
 
 End of sample text.
+
+Awesome! Your environment is ready. Let's tackle Day 1: Parsing and Chunking Documents.
+
+Today, we are going to write a clean, isolated Python script that takes a raw PDF or text file, reads it, and chops it into structured chunks.
+
+Why do we "chunk" documents?
+Large Language Models (LLMs) can only read a certain number of words at a time. If you feed an entire 100-page manual into an LLM all at once, it costs a lot of money, slows down the response time, and the AI often forgets details hidden in the middle.
+
+By chopping the document into smaller paragraphs (chunks), our search engine can look at our user's question, find the exact 3 or 4 relevant paragraphs, and only send those to the AI.
+
+Step 1: Create Your Python File
+Inside your production-rag-app folder, create a new file named ingest.py.
+
+Also, find a sample PDF or create a simple text file with a few paragraphs of information (let's name it sample.txt) and save it in the same folder.
+
+Step 2: The Code
+Copy and paste the following code into your ingest.py file. This code uses LangChain's RecursiveCharacterTextSplitter, which is the industry standard because it gracefully splits text by paragraphs first, then sentences, and finally words, ensuring thoughts aren't cut in half.
