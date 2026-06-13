@@ -1,0 +1,14 @@
+
+This is a simple sample text file created to demonstrate multiple paragraphs.
+It contains a few short paragraphs separated by blank lines. Each paragraph
+is meant to be brief and clear, serving as an example of plain text content.
+
+The second paragraph adds a little more information. It is intentionally
+concise, focusing on readability and a neutral tone. This style works well
+for documentation, notes, or placeholder content in a project.
+
+Here is the third paragraph. It provides a closing thought: simple and
+useful text can make a project easier to understand, especially when used
+for examples, tests, or quick prototypes.
+
+End of sample text.
