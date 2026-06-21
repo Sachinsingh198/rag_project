@@ -1,6 +1,10 @@
 import os
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
+
+DB_DIR = 'chroma_db'
 
 def process_document(file_path):
     document_loader = TextLoader(file_path)
@@ -15,12 +19,19 @@ def process_document(file_path):
 
     chunks = text_splitter.split_documents(raw_document)
 
-    print(f"Successfully split document into {len(chunks)} chunks\n")
+    # 3. Initialize the free, local embedding model
+    print("--- Initializing Embedding Model (this may take a moment on first run)... ---")
+    embedding_model = HuggingFaceEmbeddings(model_name = "all-MiniLM-L6-v2")
 
-    for i, chunk in enumerate(chunks[:3]):
-        print(f"=== CHUNK {i + 1} ===")
-        print(chunk.page_content)
-        print(f"Metadata associated: {chunk.metadata}\n")
+    # 4. Create the Vector Database and save the chunks to disk
+    print(f"--- Saving chunks to vector database at './{DB_DIR}'... ---")
+    vector_db = Chroma.from_documents(
+        documents = chunks, 
+        embedding = embedding_model,  
+        persist_directory = DB_DIR # This folder will save your data permanently
+    )
+
+    
 
 
 if __name__ == "__main__":

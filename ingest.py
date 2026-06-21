@@ -1,9 +1,15 @@
 import os
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
 
 
-def process_document(file_path):
+# Define where we want to save our database on our hard drive
+DB_DIR = 'chroma_db'
+
+
+def process_and_save_document(file_path):
 
     ## 1. Load the documents
     print(f"Loading the doucument : {file_path}")
@@ -23,13 +29,20 @@ def process_document(file_path):
     # 3. Split the document into chunks
     chunks = text_splitter.split_documents(raw_document)
 
-    # 4. Let's inspect the first couple of chunks to see what they look like
-    print(f"Successfully split document into {len(chunks)} smaller chunks\n")
+    # 3. Initialize the free, local embedding model
+    print("--- Initializing Embedding Model (this may take a moment on first run)... ---")
+    embedding_model = HuggingFaceEmbeddings(model_name = "all-MiniLM-L6-v2")
 
-    for i, chunk in enumerate(chunks[:3]):
-        print(f"=== CHUNK {i + 1} ===")
-        print(chunk.page_content)
-        print(f"Metadata associated: {chunk.metadata}\n")
+    # 4. Create the Vector Database and save the chunks to disk
+    print(f"--- Saving chunks to vector database at './{DB_DIR}'... ---")
+    vector_db = Chroma.from_documents(
+        documents = chunks, 
+        embedding = embedding_model,
+        persist_directory = DB_DIR # This folder will save your data permanently
+    )
+
+    print("🎉 Success! Your document is embedded and stored in the database.")
+    
 
 
 
@@ -37,6 +50,7 @@ if __name__ == "__main__" :
     sample_file = "sample.txt";
     
     if(os.path.exists(sample_file)):
-        process_document(sample_file)
+        process_and_save_document(sample_file)
     else :
         print(f"Error: Please create a file named '{sample_file}' in this folder first!")
+
